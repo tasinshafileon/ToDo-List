@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title></title>
+
+    <link rel="stylesheet" href="css/styles.css">
+  </head>
+  <body>
+
+    <h1>Hello! Today is <%= theDay %>.</h1>
+
+    <ul>
+      <% for(var i = 0; i<items.length; i++){ %>
+        <li><%= items[i] %></li>
+      <%}%>
+
+    </ul>
+
+    <form action="/" method="post">
+
+      <input type="text" name="todoItem">
+      <button type="submit" name="submit">OK</button>
+
+    </form>
+
+    <script src="js/index.js" charset="utf-8"></script>
+
+  </body>
+</html>
