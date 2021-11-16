@@ -2,37 +2,33 @@ const express = require('express');
 const app = express();
 const path = require('path');
 const bodyParser = require('body-parser');
-var itemsList = ["Wake Up","Scroll through phone","Sit to learn something new","Eat","Sleep","JDM"];
+var listItems = ["Wake Up", "Brush Teeth", "Have Breakfast"];
 
-app.set('view engine', 'ejs');
+app.use(bodyParser.urlencoded({extended:true}));
 
-app.use(bodyParser.urlencoded({extended: true}));
+app.set("view engine", "ejs")
 
-app.use(express.static("public"));
+app.get("/", function(req, res){
+  const date = new Date();
 
-app.get("/", function(req, res) {
-
-  const d = new Date();
-
-  const option = {
-    weekday : "long",
-    day: "numeric",
+  const options = {
+    weekday: "long",
+    year: "numeric",
     month: "long",
-    year: "numeric"
+    day: "numeric"
   };
 
-
-  res.render("index", {theDay: d.toLocaleDateString("en-US", option), items: itemsList});
-
+  res.render("index", {dayInfo: date.toLocaleDateString("en-US", options), items: listItems});
 });
 
 app.post("/", function(req, res){
 
-  itemsList.push(req.body.todoItem);
+  listItems.push(req.body.userListItem);
 
   res.redirect("/");
+
 });
 
-app.listen(3000, function() {
-  console.log("Server running on localhost:3000");
+app.listen(3000, function(){
+  console.log("Server is running on localhost:3000");
 });
