@@ -1,10 +1,11 @@
 const express = require('express');
 const app = express();
-const path = require('path');
 const bodyParser = require('body-parser');
-var listItems = ["Wake Up", "Brush Teeth", "Have Breakfast"];
+var listItems = [];
 
 app.use(bodyParser.urlencoded({extended:true}));
+
+app.use(express.static("public"));
 
 app.set("view engine", "ejs")
 
@@ -13,7 +14,6 @@ app.get("/", function(req, res){
 
   const options = {
     weekday: "long",
-    year: "numeric",
     month: "long",
     day: "numeric"
   };

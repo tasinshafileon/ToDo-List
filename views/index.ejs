@@ -1,27 +1,38 @@
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
-  <head>
-    <meta charset="utf-8">
-    <title>ToDo List</title>
 
-    <link rel="stylesheet" href="css/styles.css">
-  </head>
-  <body>
+<head>
+  <meta charset="utf-8">
+  <title>ToDo List</title>
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Shippori+Antique&display=swap" rel="stylesheet">
+</head>
 
-    <h1>Hello, Today is <%= dayInfo %></h1>
+<body>
 
-    <ul>
-      <%for(var i=0; i<items.length;i++){%>
-        <li><%= items[i] %></li>
-      <%}%>
-    </ul>
+  <div class="box" id="heading">
+    <h1><%= dayInfo %></h1>
+  </div>
 
-    <form class="" action="/" method="post">
+  <div class="box">
+    <%for(var i=0; i<items.length;i++){%>
+    <div class="item">
+      <input type="checkbox">
+      <p><%= items[i] %></p>
+    </div>
+    <%}%>
 
-      <input type="text" name="userListItem">
-      <button type="submit" name="button">Add Item</button>
-
+    <form class="item" action="/" method="post">
+      <input type="text" name="userListItem" placeholder="Add item" autocomplete="off">
+      <button type="submit" name="button">+</button>
     </form>
+
+  </div>
+
+  <footer>©Tasin Shafi Leon</footer>
+
 
     <script src="js/index.js" charset="utf-8"></script>
 
