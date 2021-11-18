@@ -10,6 +10,7 @@ app.use(express.static("public"));
 app.set("view engine", "ejs")
 
 app.get("/", function(req, res){
+
   const date = new Date();
 
   const options = {
@@ -19,11 +20,14 @@ app.get("/", function(req, res){
   };
 
   res.render("index", {dayInfo: date.toLocaleDateString("en-US", options), items: listItems});
+
 });
 
 app.post("/", function(req, res){
 
-  listItems.push(req.body.userListItem);
+  if(req.body.userListItem!==""){
+    listItems.push(req.body.userListItem);
+  }
 
   res.redirect("/");
 
