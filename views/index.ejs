@@ -18,12 +18,12 @@
   </div>
 
   <div class="box">
-    <%for(var i=0; i<items.length;i++){%>
+    <%items.forEach(function(n){%>
     <div class="item">
       <input type="checkbox">
-      <p><%= items[i] %></p>
+      <p><%= n.item %></p>
     </div>
-    <%}%>
+    <%})%>
 
     <form class="item" action="/" method="post">
       <input type="text" name="userListItem" placeholder="Add item" autocomplete="off">
@@ -34,5 +34,6 @@
 
   <footer>©Tasin Shafi Leon</footer>
 
-  </body>
+</body>
+
 </html>
