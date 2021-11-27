@@ -17,16 +17,6 @@ const listItemsSchema = {
 
 const ListItem = mongoose.model("item", listItemsSchema);
 
-
-
-// ListItem.insertMany([listItem1, listItem2, listItem3], function(err){
-//   if(err){
-//     console.log("There was an error");
-//   }else{
-//     console.log("Successfully inserted items");
-//   }
-// });
-
 app.get("/", function(req, res){
 
   const date = new Date();
@@ -57,6 +47,17 @@ app.post("/", function(req, res){
   }
 
   res.redirect("/");
+
+});
+
+app.post("/delete", function(req, res){
+
+  setTimeout(function(){
+    ListItem.deleteOne({_id: req.body.checkbox}, function(err){});
+    res.redirect("/");
+  },1500);
+
+
 
 });
 
