@@ -14,23 +14,23 @@
 <body>
 
   <div class="box" id="heading">
-    <h1><%= dayInfo %></h1>
+    <h1><%= title %></h1>
   </div>
 
   <div class="box">
     <form action="/delete" method="post">
 
       <%items.forEach(function(n){%>
-        <div class="item">
-          <input type="checkbox" value="<%=n._id%>" name="checkbox" onchange="this.form.submit()">
-          <p><%= n.item %></p>
-        </div>
-        <%})%>
+      <div class="item">
+        <input type="checkbox" value="<%=n._id%>" name="checkbox" onchange="this.form.submit()">
+        <p><%= n.item %></p>
+      </div>
+      <%})%>
 
     </form>
 
     <form class="item" action="/" method="post">
-      <input type="text" name="userListItem" placeholder="Add item" autocomplete="off">
+      <input type="text" name="userListItem" placeholder="Add item" autocomplete="off" autofocus>
       <button type="submit" name="button">+</button>
     </form>
 

@@ -3,7 +3,9 @@ const app = express();
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 
-app.use(bodyParser.urlencoded({extended:true}));
+app.use(bodyParser.urlencoded({
+  extended: true
+}));
 
 app.use(express.static("public"));
 
@@ -11,13 +13,20 @@ app.set("view engine", "ejs")
 
 mongoose.connect("mongodb://localhost:27017/todolistDB");
 
-const listItemsSchema = {
+const itemsSchema = {
   item: "String"
 };
 
-const ListItem = mongoose.model("item", listItemsSchema);
+const Item = mongoose.model("item", itemsSchema);
 
-app.get("/", function(req, res){
+const dynamicListSchema = {
+  name: "String",
+  items: [itemsSchema]
+};
+
+const DynamicList = mongoose.model("dynamicList", dynamicListSchema);
+
+app.get("/", function(req, res) {
 
   const date = new Date();
 
@@ -27,22 +36,46 @@ app.get("/", function(req, res){
     day: "numeric"
   };
 
-  ListItem.find({}, function(err, foundItems){
-    res.render("index", {dayInfo: date.toLocaleDateString("en-US", options), items: foundItems});
+  Item.find({}, function(err, foundItems) {
+    res.render("index", {
+      title: date.toLocaleDateString("en-US", options),
+      items: foundItems
+    });
   });
-
 
 });
 
-app.post("/", function(req, res){
+app.get("/:dynamicRoute", function(req, res) {
 
-  if(req.body.userListItem!==""){
+  DynamicList.findOne({name: req.params.dynamicRoute}, function(err, found){
+    if(!err){
+      if (!found) {
+        const dynamicItem1 = new DynamicList({
+          name: req.params.dynamicRoute,
+          items: [{item: "R"}, {item: "F"}]
+        });
+        dynamicItem1.save();
 
-    const listItem1 = new ListItem({
+        res.redirect("/"+req.params.dynamicRoute);
+      }else{
+        res.render("index", {
+          title: found.name.charAt(0).toUpperCase() + found.name.substr(1).toLowerCase(),
+          items: found.items
+        });
+      }
+    }
+  });
+
+});
+
+app.post("/", function(req, res) {
+
+  if (req.body.userListItem !== "") {
+    const item1 = new Item({
       item: req.body.userListItem
     });
 
-    listItem1.save();
+    item1.save();
 
   }
 
@@ -50,17 +83,17 @@ app.post("/", function(req, res){
 
 });
 
-app.post("/delete", function(req, res){
+app.post("/delete", function(req, res) {
 
-  setTimeout(function(){
-    ListItem.deleteOne({_id: req.body.checkbox}, function(err){});
+  setTimeout(function() {
+    Item.deleteOne({
+      _id: req.body.checkbox
+    }, function(err) {});
     res.redirect("/");
-  },1500);
-
-
+  }, 1000);
 
 });
 
-app.listen(process.env.PORT || 3000, function(){
+app.listen(process.env.PORT || 3000, function() {
   console.log("Server is running on localhost:3000");
 });
