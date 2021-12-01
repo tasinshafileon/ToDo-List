@@ -2,6 +2,7 @@ const express = require('express');
 const app = express();
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
+const _ = require('lodash')
 
 app.use(bodyParser.urlencoded({
   extended: true
@@ -50,17 +51,17 @@ app.get("/", function(req, res) {
 app.get("/:dynamicRoute", function(req, res) {
 
   DynamicList.findOne({
-    name: req.params.dynamicRoute
+    name: _.capitalize(req.params.dynamicRoute)
   }, function(err, found) {
     if (!err) {
       if (!found) {
         const dynamicItem1 = new DynamicList({
-          name: req.params.dynamicRoute,
+          name: _.capitalize(req.params.dynamicRoute),
           items: []
         });
         dynamicItem1.save();
 
-        res.redirect("/" + req.params.dynamicRoute);
+        res.redirect("/" + _.capitalize(req.params.dynamicRoute));
       } else {
         res.render("index", {
           title: found.name,
@@ -98,12 +99,20 @@ app.post("/", function(req, res) {
 
 app.post("/delete", function(req, res) {
 
-  setTimeout(function() {
-    Item.deleteOne({
-      _id: req.body.checkbox
-    }, function(err) {});
-    res.redirect("/");
-  }, 1000);
+  if(req.body.itemTitle === date.toLocaleDateString("en-US", options)){
+    setTimeout(function() {
+      Item.deleteOne({
+        _id: req.body.checkbox
+      }, function(err) {});
+      res.redirect("/");
+    }, 1000);
+  }else{
+    DynamicList.findOneAndUpdate({name: req.body.itemTitle}, {$pull: {listItems: {_id: req.body.checkbox}}}, function(err, found){
+      if(!err){
+        res.redirect("/"+req.body.itemTitle)
+      }
+    });
+  }
 
 });
 
