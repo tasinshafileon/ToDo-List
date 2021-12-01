@@ -13,6 +13,15 @@ app.set("view engine", "ejs")
 
 mongoose.connect("mongodb://localhost:27017/todolistDB");
 
+
+const date = new Date();
+
+const options = {
+  weekday: "long",
+  month: "long",
+  day: "numeric"
+};
+
 const itemsSchema = {
   item: "String"
 };
@@ -21,20 +30,13 @@ const Item = mongoose.model("item", itemsSchema);
 
 const dynamicListSchema = {
   name: "String",
-  items: [itemsSchema]
+  listItems: [itemsSchema]
 };
 
 const DynamicList = mongoose.model("dynamicList", dynamicListSchema);
 
 app.get("/", function(req, res) {
 
-  const date = new Date();
-
-  const options = {
-    weekday: "long",
-    month: "long",
-    day: "numeric"
-  };
 
   Item.find({}, function(err, foundItems) {
     res.render("index", {
@@ -47,20 +49,22 @@ app.get("/", function(req, res) {
 
 app.get("/:dynamicRoute", function(req, res) {
 
-  DynamicList.findOne({name: req.params.dynamicRoute}, function(err, found){
-    if(!err){
+  DynamicList.findOne({
+    name: req.params.dynamicRoute
+  }, function(err, found) {
+    if (!err) {
       if (!found) {
         const dynamicItem1 = new DynamicList({
           name: req.params.dynamicRoute,
-          items: [{item: "R"}, {item: "F"}]
+          items: []
         });
         dynamicItem1.save();
 
-        res.redirect("/"+req.params.dynamicRoute);
-      }else{
+        res.redirect("/" + req.params.dynamicRoute);
+      } else {
         res.render("index", {
-          title: found.name.charAt(0).toUpperCase() + found.name.substr(1).toLowerCase(),
-          items: found.items
+          title: found.name,
+          items: found.listItems
         });
       }
     }
@@ -70,16 +74,25 @@ app.get("/:dynamicRoute", function(req, res) {
 
 app.post("/", function(req, res) {
 
-  if (req.body.userListItem !== "") {
-    const item1 = new Item({
-      item: req.body.userListItem
+  const item1 = new Item({
+    item: req.body.newListItem
+  });
+
+  if (req.body.button === date.toLocaleDateString("en-US", options)) {
+    if (req.body.newListItem !== "") {
+      item1.save();
+    }
+    res.redirect("/");
+  } else {
+    DynamicList.findOne({
+      name: req.body.button
+    }, function(err, found) {
+      found.listItems.push(item1);
+      found.save();
     });
-
-    item1.save();
-
+    res.redirect("/" + req.body.button);
   }
 
-  res.redirect("/");
 
 });
 
