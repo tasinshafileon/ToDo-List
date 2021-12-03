@@ -25,15 +25,14 @@
         <input type="checkbox" value="<%=n._id%>" name="checkbox" onchange="this.form.submit()">
         <p><%= n.item %></p>
       </div>
-
-      <input type="hidden" name="itemTitle" value="<%=title%>">
       <%})%>
+      <input type="hidden" name="itemTitle" value="<%=title%>">
 
     </form>
 
     <form class="item" action="/" method="post">
       <input type="text" name="newListItem" placeholder="Add item" autocomplete="off" autofocus>
-      <button type="submit" name="button" value="<%=title%>" >+</button>
+      <button type="submit" name="button" value="<%=title%>">+</button>
     </form>
 
   </div>
