@@ -3,6 +3,7 @@ const app = express();
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const _ = require('lodash');
+require('dotenv').config();
 
 app.use(bodyParser.urlencoded({extended: true}));
 
@@ -10,7 +11,7 @@ app.use(express.static("public"));
 
 app.set("view engine", "ejs");
 
-mongoose.connect("mongodb+srv://tasinshafileon:leon1215225rifa@cluster0.ai3n9.mongodb.net/todolistDB");
+mongoose.connect("mongodb+srv://"+process.env.USER_ID+":"+process.env.USER_PASSWORD+"@cluster0.ai3n9.mongodb.net/todolistDB");
 
 const date = new Date();
 
